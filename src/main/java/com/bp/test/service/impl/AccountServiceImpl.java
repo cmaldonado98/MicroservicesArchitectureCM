@@ -40,10 +40,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public CommonResponseDto createAccount(AccountDto accountDto){
+    public CommonResponseDto createAccount(AccountDto accountDto) {
+        log.info(String.format("Creating account with name: %s and status: %s", accountDto.getNameClient(), accountDto.getAccountId().toString()));
 
         Optional<ClientEntity> clientEntity = clientRepository.findByIdentification(accountDto.getIdentification());
-        if(clientEntity.isPresent() && clientEntity.get().getPassword().equals(accountDto.getPassword())){
+        if (clientEntity.isPresent() && clientEntity.get().getPassword().equals(accountDto.getPassword())) {
             AccountEntity newAccount = new AccountEntity();
             newAccount.setAccountNumber(accountDto.getAccountNumber());
             newAccount.setAccountType(accountDto.getType());
@@ -58,6 +59,50 @@ public class AccountServiceImpl implements AccountService {
                     .response(String.format("ID: %s Name: %s", newAccount.getIdAccount(), newAccount.getClient().getName()))
                     .build();
         }
-        throw new ApplicationException(ResponseStatusCode.PASSWORD_DOES_NOT_MATCH);
+        throw new ApplicationException(ResponseStatusCode.PASSWORD_OR_CLIENT_INCORRECT);
     }
+
+    @Override
+    public CommonResponseDto updateAccount(AccountDto account) {
+        log.info(String.format("Updating account with id: %s", account.getAccountId().toString()));
+        if (Boolean.TRUE.equals(validateUserAndPassword(account.getIdentification(), account.getPassword()))) {
+            AccountEntity accountEntity = accountRepository.findById(account.getAccountId())
+                    .orElseThrow(() -> {
+                        log.error(String.format("Account to be updated not found id: %s", account.getAccountId().toString()));
+                        return new ApplicationException(ResponseStatusCode.CLIENT_DOES_NOT_EXISTS);
+                    });
+            accountEntity.setAccountNumber(account.getAccountNumber());
+            accountEntity.setAccountType(account.getType());
+            accountEntity.setInitialBalance(account.getInitialBalance());
+            accountEntity.setAccountStatus(account.getStatus());
+            accountRepository.save(accountEntity);
+            return CommonResponseDto.build(OK);
+        }
+        throw new ApplicationException(ResponseStatusCode.PASSWORD_OR_CLIENT_INCORRECT);
+    }
+
+    @Override
+    public CommonResponseDto deleteAccount(AccountDto account) {
+        log.info(String.format("Deleting account with id: %s", account.getAccountId().toString()));
+        if (Boolean.TRUE.equals(validateUserAndPassword(account.getIdentification(), account.getPassword()))) {
+            AccountEntity accountEntity = accountRepository.findById(account.getAccountId())
+                    .orElseThrow(() -> {
+                        log.error(String.format("Account to be deleted not found id: %s", account.getAccountId().toString()));
+                        return new ApplicationException(ResponseStatusCode.CLIENT_DOES_NOT_EXISTS);
+                    });
+            accountRepository.delete(accountEntity);
+            return CommonResponseDto.build(OK);
+        }
+
+        throw new ApplicationException(ResponseStatusCode.PASSWORD_OR_CLIENT_INCORRECT);
+    }
+
+    private Boolean validateUserAndPassword(String identification, String password) {
+        Optional<ClientEntity> clientEntity = clientRepository.findByIdentification(identification);
+        if (clientEntity.isPresent() && clientEntity.get().getPassword().equals(password)) {
+            return true;
+        }
+        return false;
+    }
+
 }

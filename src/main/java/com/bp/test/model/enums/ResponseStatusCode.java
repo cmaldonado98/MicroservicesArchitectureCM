@@ -9,7 +9,7 @@ public enum ResponseStatusCode {
   OK("0", "success"),
   INVALID_PARAMETERS("1","Some or all the parameter are null or empty"),
   CLIENT_DOES_NOT_EXISTS("2","The client does not exists."),
-  PASSWORD_DOES_NOT_MATCH("3","The password does not match."),
+  PASSWORD_OR_CLIENT_INCORRECT("3","The user or password is incorrect."),
   INVALID_AMOUNT("4","The initial amount cannot be negative."),
 
   UNDEFINED_ERROR("500","Unexpected error: %s"),

@@ -9,4 +9,6 @@ public interface AccountService {
 
     List<AccountDto> getAccountsById(Long clientId);
     CommonResponseDto createAccount(AccountDto accountDto);
+    CommonResponseDto updateAccount(AccountDto account);
+    CommonResponseDto deleteAccount(AccountDto account);
 }
