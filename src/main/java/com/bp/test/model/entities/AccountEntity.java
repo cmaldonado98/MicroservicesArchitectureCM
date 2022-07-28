@@ -8,6 +8,8 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 
+import java.util.List;
+
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
@@ -39,4 +41,8 @@ public class AccountEntity {
 
     @Column(name = "account_status")
     Boolean accountStatus;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    List<MovementsEntity> movements;
+
 }

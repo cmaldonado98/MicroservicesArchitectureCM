@@ -13,6 +13,9 @@ public enum ResponseStatusCode {
   INVALID_AMOUNT("4","The initial amount cannot be negative."),
   INVALID_USER_FOR_ACCOUNT("5","The account does not belong to the user."),
   ACCOUNT_DOES_NOT_EXISTS("6","The account does not exists."),
+  ACCOUNT_HAS_INSUFFICIENT_BALANCE("7","The account has insufficient balance."),
+  ACCOUNT_EXCEED_LIMIT("8","The account exceed the maximum limit of 1000."),
+  MOVEMENT_DOES_NOT_EXISTS("9","The movement does not exists."),
 
   UNDEFINED_ERROR("500","Unexpected error: %s"),
   UNDEFINED_VALUE("-1","status not found")

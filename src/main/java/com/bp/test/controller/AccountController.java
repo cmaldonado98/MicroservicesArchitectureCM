@@ -55,6 +55,9 @@ public class AccountController {
     @Produces("application/json")
     public ResponseEntity<CommonResponseDto> deleteAccount(@RequestBody AccountDto account) {
 
+        if (Boolean.TRUE.equals(StringUtils.isBlank(account.getAccountNumber()) || StringUtils.isBlank(account.getPassword()) || StringUtils.isBlank(account.getIdentification()))) {
+            return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDto.build(ResponseStatusCode.INVALID_PARAMETERS));
+        }
         return ResponseEntity.status(HttpStatus.OK).body(accountService.deleteAccount(account));
     }
 }
