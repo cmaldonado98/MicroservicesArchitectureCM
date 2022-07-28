@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -23,8 +20,13 @@ import static lombok.AccessLevel.PRIVATE;
 public class AccountEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_account", nullable = false)
     Long idAccount;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    ClientEntity client;
 
     @Column(name = "account_number")
     String accountNumber;

@@ -2,6 +2,6 @@ INSERT INTO person (id_person, name, gender, age, identification, address, phone
 
 INSERT INTO client (client_id, password, status) VALUES (1, '12345', true);
 
-INSERT INTO account (id_account, account_number, account_type, initial_balance, account_status) VALUES (1, '98776', 'Ahorros', 100.50, true);
+INSERT INTO account (id_account, account_number, account_type, initial_balance, account_status, client_id) VALUES (1, '98776', 'Ahorros', 100.50, true, 1);
 
 INSERT INTO movement (id_movement, create_time, movement_type, movement_value, balance) VALUES (1, '2022-11-01', 'Credito', 50.25, 45.60);
