@@ -35,6 +35,6 @@ public class AccountEntity {
     @Column(name = "initial_balance")
     Double initialBalance;
 
-    @Column(name = "account_state")
-    Boolean accountState;
+    @Column(name = "account_status")
+    Boolean accountStatus;
 }
