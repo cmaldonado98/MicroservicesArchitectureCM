@@ -10,6 +10,7 @@ public enum ResponseStatusCode {
   INVALID_PARAMETERS("1","Some or all the parameter are null or empty"),
   CLIENT_DOES_NOT_EXISTS("2","The client does not exists."),
   PASSWORD_DOES_NOT_MATCH("3","The password does not match."),
+  INVALID_AMOUNT("4","The initial amount cannot be negative."),
 
   UNDEFINED_ERROR("500","Unexpected error: %s"),
   UNDEFINED_VALUE("-1","status not found")

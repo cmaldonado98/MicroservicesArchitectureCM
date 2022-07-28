@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface AccountService {
 
-    List<AccountDto> getAllAccounts(Long clientId);
+    List<AccountDto> getAccountsById(Long clientId);
     CommonResponseDto createAccount(AccountDto accountDto);
 }

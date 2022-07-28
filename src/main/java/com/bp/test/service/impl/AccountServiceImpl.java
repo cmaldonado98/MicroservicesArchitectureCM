@@ -32,8 +32,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AccountDto> getAllAccounts(Long clientId) {
-        log.info("Obtaining all accounts");
+    public List<AccountDto> getAccountsById(Long clientId) {
+        log.info("Obtaining all accounts by client ID");
         return accountRepository.getAccountsWithClient(clientId).map(mapper::mapAccount).collect(Collectors.toList());
 
     }

@@ -20,18 +20,22 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @GetMapping("/all")
+    @GetMapping("/{clientId}")
     @Produces("application/json")
-    public ResponseEntity<List<AccountDto>> getAccounts() {
-        return ResponseEntity.status(HttpStatus.OK).body(accountService.getAllAccounts(1L));
+    public ResponseEntity<List<AccountDto>> getAccountsById(@PathVariable Long clientId) {
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccountsById(clientId));
     }
 
     @PostMapping
     @Produces("application/json")
-    public ResponseEntity<CommonResponseDto> createAccount(@RequestBody AccountDto account){
+    public ResponseEntity<CommonResponseDto> createAccount(@RequestBody AccountDto account) {
         account.setAccountId(null);
         if (Boolean.TRUE.equals(StringUtils.isBlank(account.getAccountNumber())) || StringUtils.isBlank(account.getPassword()) || StringUtils.isBlank(account.getIdentification())) {
             return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDto.build(ResponseStatusCode.INVALID_PARAMETERS));
+        }
+
+        if (account.getInitialBalance() < 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDto.build(ResponseStatusCode.INVALID_AMOUNT));
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(accountService.createAccount(account));

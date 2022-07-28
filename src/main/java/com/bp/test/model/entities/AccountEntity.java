@@ -28,7 +28,7 @@ public class AccountEntity {
     @JoinColumn(name = "client_id")
     ClientEntity client;
 
-    @Column(name = "account_number")
+    @Column(name = "account_number", unique = true)
     String accountNumber;
 
     @Column(name = "account_type")

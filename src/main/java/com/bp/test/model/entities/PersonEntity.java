@@ -31,7 +31,7 @@ public class PersonEntity {
     @Column(name = "age")
     Long age;
 
-    @Column(name = "identification")
+    @Column(name = "identification", unique = true)
     String identification;
 
     @Column(name = "address")
