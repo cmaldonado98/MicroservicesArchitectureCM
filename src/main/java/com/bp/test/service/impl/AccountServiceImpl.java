@@ -41,7 +41,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public CommonResponseDto createAccount(AccountDto accountDto) {
-        log.info(String.format("Creating account with name: %s and status: %s", accountDto.getNameClient(), accountDto.getAccountId().toString()));
+        log.info(String.format("Creating account with number: %s", accountDto.getAccountNumber()));
 
         Optional<ClientEntity> clientEntity = clientRepository.findByIdentification(accountDto.getIdentification());
         if (clientEntity.isPresent() && clientEntity.get().getPassword().equals(accountDto.getPassword())) {
@@ -65,18 +65,23 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public CommonResponseDto updateAccount(AccountDto account) {
         log.info(String.format("Updating account with id: %s", account.getAccountId().toString()));
+
         if (Boolean.TRUE.equals(validateUserAndPassword(account.getIdentification(), account.getPassword()))) {
             AccountEntity accountEntity = accountRepository.findById(account.getAccountId())
                     .orElseThrow(() -> {
                         log.error(String.format("Account to be updated not found id: %s", account.getAccountId().toString()));
-                        return new ApplicationException(ResponseStatusCode.CLIENT_DOES_NOT_EXISTS);
+                        return new ApplicationException(ResponseStatusCode.ACCOUNT_DOES_NOT_EXISTS);
                     });
-            accountEntity.setAccountNumber(account.getAccountNumber());
-            accountEntity.setAccountType(account.getType());
-            accountEntity.setInitialBalance(account.getInitialBalance());
-            accountEntity.setAccountStatus(account.getStatus());
-            accountRepository.save(accountEntity);
-            return CommonResponseDto.build(OK);
+            Optional<ClientEntity> clientEntity = clientRepository.findByIdentification(account.getIdentification());
+            if (clientEntity.isPresent() && clientEntity.get().getIdPerson().equals(accountEntity.getClient().getIdPerson())) {
+                accountEntity.setAccountNumber(account.getAccountNumber());
+                accountEntity.setAccountType(account.getType());
+                accountEntity.setInitialBalance(account.getInitialBalance());
+                accountEntity.setAccountStatus(account.getStatus());
+                accountRepository.save(accountEntity);
+                return CommonResponseDto.build(OK);
+            }
+            throw new ApplicationException(ResponseStatusCode.INVALID_USER_FOR_ACCOUNT);
         }
         throw new ApplicationException(ResponseStatusCode.PASSWORD_OR_CLIENT_INCORRECT);
     }
@@ -88,10 +93,14 @@ public class AccountServiceImpl implements AccountService {
             AccountEntity accountEntity = accountRepository.findById(account.getAccountId())
                     .orElseThrow(() -> {
                         log.error(String.format("Account to be deleted not found id: %s", account.getAccountId().toString()));
-                        return new ApplicationException(ResponseStatusCode.CLIENT_DOES_NOT_EXISTS);
+                        return new ApplicationException(ResponseStatusCode.ACCOUNT_DOES_NOT_EXISTS);
                     });
-            accountRepository.delete(accountEntity);
-            return CommonResponseDto.build(OK);
+            Optional<ClientEntity> clientEntity = clientRepository.findByIdentification(account.getIdentification());
+            if (clientEntity.isPresent() && clientEntity.get().getIdPerson().equals(accountEntity.getClient().getIdPerson())) {
+                accountRepository.delete(accountEntity);
+                return CommonResponseDto.build(OK);
+            }
+            throw new ApplicationException(ResponseStatusCode.INVALID_USER_FOR_ACCOUNT);
         }
 
         throw new ApplicationException(ResponseStatusCode.PASSWORD_OR_CLIENT_INCORRECT);

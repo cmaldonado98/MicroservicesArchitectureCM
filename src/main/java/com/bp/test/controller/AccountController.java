@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.Produces;
@@ -52,9 +51,8 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(accountService.updateAccount(account));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @Produces("application/json")
-    @Transactional
     public ResponseEntity<CommonResponseDto> deleteAccount(@RequestBody AccountDto account) {
 
         return ResponseEntity.status(HttpStatus.OK).body(accountService.deleteAccount(account));

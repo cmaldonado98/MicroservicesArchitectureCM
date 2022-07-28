@@ -11,6 +11,8 @@ public enum ResponseStatusCode {
   CLIENT_DOES_NOT_EXISTS("2","The client does not exists."),
   PASSWORD_OR_CLIENT_INCORRECT("3","The user or password is incorrect."),
   INVALID_AMOUNT("4","The initial amount cannot be negative."),
+  INVALID_USER_FOR_ACCOUNT("5","The account does not belong to the user."),
+  ACCOUNT_DOES_NOT_EXISTS("6","The account does not exists."),
 
   UNDEFINED_ERROR("500","Unexpected error: %s"),
   UNDEFINED_VALUE("-1","status not found")
