@@ -1,9 +1,6 @@
 package com.bp.test.model.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
@@ -21,6 +18,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class PersonEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_person", nullable = false)
     Long idPerson;
 
