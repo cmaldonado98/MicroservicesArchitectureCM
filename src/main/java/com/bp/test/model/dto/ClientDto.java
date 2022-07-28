@@ -21,4 +21,5 @@ public class ClientDto {
     String phone;
     String password;
     Boolean status;
+    String identification;
 }

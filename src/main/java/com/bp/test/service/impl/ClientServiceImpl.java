@@ -46,6 +46,7 @@ public class ClientServiceImpl implements ClientService {
         newClient.setPhone(client.getPhone());
         newClient.setPassword(client.getPassword());
         newClient.setStatus(client.getStatus());
+        newClient.setIdentification(client.getIdentification());
 
         newClient = clientRepository.save(newClient);
 
@@ -71,6 +72,7 @@ public class ClientServiceImpl implements ClientService {
         clientEntity.setPhone(client.getPhone());
         clientEntity.setPassword(client.getPassword());
         clientEntity.setStatus(client.getStatus());
+        clientEntity.setIdentification(client.getIdentification());
         clientRepository.save(clientEntity);
 
         return CommonResponseDto.build(OK);

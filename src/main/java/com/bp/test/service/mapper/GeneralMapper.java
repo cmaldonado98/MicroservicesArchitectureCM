@@ -15,6 +15,7 @@ public class GeneralMapper {
                 .phone(client.getPhone())
                 .password(client.getPassword())
                 .status(client.getStatus())
+                .identification(client.getIdentification())
                 .build();
     }
 }
