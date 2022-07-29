@@ -2,6 +2,7 @@ package com.bp.test.controller;
 
 import com.bp.test.model.dto.CommonResponseDto;
 import com.bp.test.model.dto.movements.MovementDto;
+import com.bp.test.model.dto.movements.MovementReportRequest;
 import com.bp.test.model.dto.movements.MovementReportResponse;
 import com.bp.test.model.enums.ResponseStatusCode;
 import com.bp.test.service.MovementService;
@@ -24,6 +25,12 @@ public class MovementController {
     @Produces("application/json")
     public ResponseEntity<List<MovementReportResponse>> getMovementsByClientId(@PathVariable Long clientId) {
         return ResponseEntity.status(HttpStatus.OK).body(movementService.getMovementsByClientId(clientId));
+    }
+
+    @GetMapping("/report")
+    @Produces("application/json")
+    public ResponseEntity<List<MovementReportResponse>> getMovementsByClientId(@RequestBody MovementReportRequest movementReportRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(movementService.getReportWithIdAndDate(movementReportRequest));
     }
 
     @PostMapping

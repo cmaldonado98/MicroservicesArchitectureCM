@@ -3,6 +3,7 @@ package com.bp.test.service.impl;
 import com.bp.test.exception.ApplicationException;
 import com.bp.test.model.dto.CommonResponseDto;
 import com.bp.test.model.dto.movements.MovementDto;
+import com.bp.test.model.dto.movements.MovementReportRequest;
 import com.bp.test.model.dto.movements.MovementReportResponse;
 import com.bp.test.model.entities.AccountEntity;
 import com.bp.test.model.entities.ClientEntity;
@@ -44,6 +45,16 @@ public class MovementServiceImpl implements MovementService {
         log.info("Obtaining all movements by ID");
         return movementRepository.findByAccountClientIdPerson(id).map(mapper::mapMovement).collect(Collectors.toList());
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MovementReportResponse> getReportWithIdAndDate(MovementReportRequest movementReportRequest) {
+        log.info("Obtaining all report movements by ID and Date");
+        return movementRepository.findByAccountClientIdPerson
+                (movementReportRequest.getClientId())
+                .filter(x -> x.getCreateTime().isAfter(LocalDateTime.parse(movementReportRequest.getStartDate())) && x.getCreateTime().isBefore(LocalDateTime.parse(movementReportRequest.getEndDate())))
+                .map(mapper::mapMovement).collect(Collectors.toList());
     }
 
     @Override

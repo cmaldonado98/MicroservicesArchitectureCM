@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -17,7 +16,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 public class MovementReportRequest {
 
-    LocalDateTime startDate;
-    LocalDateTime endDate;
-    Double clientId;
+    String startDate;
+    String endDate;
+    Long clientId;
 }
