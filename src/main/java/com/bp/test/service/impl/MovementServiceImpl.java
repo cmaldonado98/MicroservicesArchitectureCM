@@ -63,14 +63,14 @@ public class MovementServiceImpl implements MovementService {
         log.info(String.format("Creating movement with number account: %s", movement.getNumberAccount()));
         Optional<ClientEntity> clientEntity = clientRepository.findByIdentification(movement.getIdentification());
         if (clientEntity.isPresent() && clientEntity.get().getPassword().equals(movement.getPassword())) {
-            Optional<AccountEntity> account = accountRepository.findByClientAccountNumber(movement.getNumberAccount());
+            Optional<AccountEntity> account = accountRepository.findByAccountNumber(movement.getNumberAccount());
             if (account.isPresent() && clientEntity.get().getIdPerson().equals(account.get().getClient().getIdPerson())) {
 
                 if (movement.getValueMovement() < 0 && Math.abs(movement.getValueMovement()) > account.get().getInitialBalance()) {
                     throw new ApplicationException(ResponseStatusCode.ACCOUNT_HAS_INSUFFICIENT_BALANCE);
-                } else if (movement.getValueMovement() < 0 && Math.abs(movement.getValueMovement()) < account.get().getInitialBalance()) {
+                } else if (movement.getValueMovement() < 0 && Math.abs(movement.getValueMovement()) <= account.get().getInitialBalance()) {
 
-                    List<MovementsEntity> movementsEntityList = movementRepository.findByAccountMovementsCreateTime();
+                    List<MovementsEntity> movementsEntityList = movementRepository.findByAccountMovementsCreateTime(movement.getNumberAccount());
                     double limitAmount = movementsEntityList.stream().mapToDouble(MovementsEntity::getMovementValue).sum();
                     if ((Math.abs(limitAmount) + Math.abs(movement.getValueMovement())) > WITHDRAW_LIMIT) {
                         throw new ApplicationException(ResponseStatusCode.ACCOUNT_EXCEED_LIMIT);
@@ -116,14 +116,14 @@ public class MovementServiceImpl implements MovementService {
         log.info(String.format("Updating movement with id: %s", movement.getMovementId().toString()));
         Optional<ClientEntity> clientEntity = clientRepository.findByIdentification(movement.getIdentification());
         if (clientEntity.isPresent() && clientEntity.get().getPassword().equals(movement.getPassword())) {
-            Optional<AccountEntity> account = accountRepository.findByClientAccountNumber(movement.getNumberAccount());
+            Optional<AccountEntity> account = accountRepository.findByAccountNumber(movement.getNumberAccount());
             if (account.isPresent() && clientEntity.get().getIdPerson().equals(account.get().getClient().getIdPerson())) {
 
                 if (movement.getValueMovement() < 0 && Math.abs(movement.getValueMovement()) > account.get().getInitialBalance()) {
                     throw new ApplicationException(ResponseStatusCode.ACCOUNT_HAS_INSUFFICIENT_BALANCE);
                 } else if (movement.getValueMovement() < 0 && Math.abs(movement.getValueMovement()) < account.get().getInitialBalance()) {
 
-                    List<MovementsEntity> movementsEntityList = movementRepository.findByAccountMovementsCreateTime();
+                    List<MovementsEntity> movementsEntityList = movementRepository.findByAccountMovementsCreateTime(movement.getNumberAccount());
                     double limitAmount = movementsEntityList.stream().mapToDouble(MovementsEntity::getMovementValue).sum();
                     if ((Math.abs(limitAmount) + Math.abs(movement.getValueMovement())) > WITHDRAW_LIMIT) {
                         throw new ApplicationException(ResponseStatusCode.ACCOUNT_EXCEED_LIMIT);
@@ -177,7 +177,7 @@ public class MovementServiceImpl implements MovementService {
 
         Optional<ClientEntity> clientEntity = clientRepository.findByIdentification(movement.getIdentification());
         if (clientEntity.isPresent() && clientEntity.get().getPassword().equals(movement.getPassword())) {
-            Optional<AccountEntity> account = accountRepository.findByClientAccountNumber(movement.getNumberAccount());
+            Optional<AccountEntity> account = accountRepository.findByAccountNumber(movement.getNumberAccount());
             if (account.isPresent() && clientEntity.get().getIdPerson().equals(account.get().getClient().getIdPerson())) {
 
                 MovementsEntity movementsEntity = movementRepository.findById(movement.getMovementId())
